@@ -12,16 +12,27 @@ fi
 #Création du fichier de synthèse du script
 LOG_INSTALL=~/YannSetup.info
 touch ${LOG_INSTALL}
+#Réinitialisation du fichier de log
+echo "Début de l'installation" > ${LOG_INSTALL}
+
+################################################################################
+#MAJ de la liste des paquets
+################################################################################
+apt-get update
 
 ################################################################################
 #GITHUB
 #Récupérer et synchroniser le repo Linux-Utils
 ################################################################################
+#Formatage du fichier de Log
+echo "#### Début de L'installation et la configuration de GIT" >> ${LOG_INSTALL} 
+echo >> ${LOG_INSTALL}
 #Installation de GIT
 apt-get install -y git
 #Check de l'installation de GIT
 if [[ "${?}" != 0 ]]
 	then
+		echo "Installation de GIT KO"
 		echo "Installation de GIT KO" >> ${LOG_INSTALL}
 		exit 1
 	else 
@@ -31,34 +42,26 @@ fi
 git remote add origin git@github.com:YannF87/Linux-Utils.git
 git config --global user.email "7456641+YannF87@users.noreply.github.com"
 git config --global user.name "Yann"
-ssh-keygen -t rsa -b 4096 -C "7456641+YannF87@users.noreply.github.com"
-ssh-add ~/.ssh/id_rsa
-#Ajout de la clé publique au fichier d'install
-echo >>${LOG_INSTALL}
-echo >>${LOG_INSTALL}
-echo "GIT Public RSA KEY à Installer sur Github" >> ${LOG_INSTALL}
-echo "https://github.com/settings/keys" >>${LOG_INSTALL}
-echo >>${LOG_INSTALL}
-echo ~/.ssh/id_rsa.pub >> ${LOG_INSTALL}
-echo >>${LOG_INSTALL}
-#display de la clé publique pour enregistrement immédiat
-echo 
-echo 
-echo "GIT Public RSA KEY à Installer sur Github" 
-echo "https://github.com/settings/keys"
-echo 
-echo ~/.ssh/id_rsa.pub 
-echo 
-#Laisser le temps d'installer la clé sur Github
-read -p "La clé est elle installée sur Github ?(y,n): " KEY_INSTALLED
-# vérifier la réponse
-if [[ "${KEY_INSTALLED}" = "n" ]]
-	then 
-		echo "Merci d'installer la clé"
+#Clonage du repo
+git clone https://github.com/YannF87/Linux-Utils.git ~/Linux-Utils 
+#check du clonage
+
+if [[ "${?}" != 0 ]]
+	then
+		echo "Le repo n'a pas pu être cloné"
 		exit 1
-	else
-		git clone git@github.com:YannF87/Linux-Utils.git ~/
+	else 
+		echo
+		echo "Le repo Linux-Utils a été correctement cloné" >> ${LOG_INSTALL}
+		echo "Le repo Linux-Utils a été correctement cloné" 
+		echo
 fi
+
+#Clôture de la section GIT dans le fichier de LOG
+echo >> ${LOG_INSTALL}  
+echo "#### Fin  de L'installation et la configuration de GIT" >> ${LOG_INSTALL} 
+echo >> ${LOG_INSTALL}
+
 
 ################################################################################
 #Installation & configuration des logiciels
@@ -92,6 +95,7 @@ fi
 #Setup de .VIMRC
 cp ~/Linux-Utils/vim/.vimrc ~/
 # Copier les plugins
+mkdir ~/.vim
 cp ~/Linux-Utils/vim/plugins/mswin.vim ~/.vim/
 
 
@@ -110,14 +114,25 @@ fi
 #Personnalisation de Bash
 #
 ################################################################################
+#Créer une section dans le fichier de log
+echo >> ${LOG_INSTALL}
+echo "### Personnalisation de Bash" >> ${LOG_INSTALL}
+echo >> ${LOG_INSTALL}
 # Changement du prompt
 echo "PS1='\[\033[01;35m\]###\[\033[01;36m\] \t \[\033[01;31m\]| \[\033[01;34m\]\u@\h\[\033[01;35m\] ### \n\[\033[01;31m\]>>> \[\033[01;32m\]\w\[\033[01;33m\]>\$:\[\033[00m\]'" >> ~/.bashrc
 
 # Création des Alias
 echo "alias cls='clear'" >> ~/.bashrc
 echo "alias la='ls -la'" >> ~/.bashrc
+#Instruction du fichier de log 
+echo "### Alias Créés:" >> ${LOG_INSTALL}
+echo "cls='clear'" >> ${LOG_INSTALL}
+echo "la='ls -la'" >> ${LOG_INSTALL}
+echo >> ${LOG_INSTALL}
 
 # Modifier les Variables d'environement
+echo "### Variables d'environement modifiées:" >> ${LOG_INSTALL}
 echo 'EDITOR="vim"' >> ~/.bashrc
+echo 'EDITOR="vim"' >> ${LOG_INSTALL}
 
-
+exit 0
