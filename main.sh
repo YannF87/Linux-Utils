@@ -6,7 +6,7 @@
 #Check de Root
 if [[ "${UID}" != 0 ]]
 	then
-		echo "Lancer via Sudo ou avec les droit Root"
+		echo "Lancer via Sudo ou avec les droit Root" >2
 		exit 1
 fi
 #Création du fichier de synthèse du script
@@ -18,7 +18,7 @@ echo "Début de l'installation" > ${LOG_INSTALL}
 ################################################################################
 #MAJ de la liste des paquets
 ################################################################################
-apt-get update
+apt-get update &> /dev/null
 
 ################################################################################
 #GITHUB
@@ -28,27 +28,29 @@ apt-get update
 echo "#### Début de L'installation et la configuration de GIT" >> ${LOG_INSTALL} 
 echo >> ${LOG_INSTALL}
 #Installation de GIT
-apt-get install -y git
+apt-get install -y git &> /dev/null
 #Check de l'installation de GIT
 if [[ "${?}" != 0 ]]
 	then
-		echo "Installation de GIT KO"
+		echo "Installation de GIT KO" >2
 		echo "Installation de GIT KO" >> ${LOG_INSTALL}
 		exit 1
 	else 
 		echo "Installation de GIT OK" >> ${LOG_INSTALL}
 fi
 #Configuration de GIT
-git remote add origin git@github.com:YannF87/Linux-Utils.git
-git config --global user.email "7456641+YannF87@users.noreply.github.com"
-git config --global user.name "Yann"
+git remote add origin git@github.com:YannF87/Linux-Utils.git &> /dev/null
+git config --global user.email "7456641+YannF87@users.noreply.github.com" &> /dev/null
+git config --global user.name "Yann" &> /dev/null
+
 #Clonage du repo
-git clone https://github.com/YannF87/Linux-Utils.git ~/Linux-Utils 
+git clone https://github.com/YannF87/Linux-Utils.git ~/Linux-Utils  &> /dev/null
+
 #check du clonage
 
 if [[ "${?}" != 0 ]]
 	then
-		echo "Le repo n'a pas pu être cloné"
+		echo "Le repo n'a pas pu être cloné" >2
 		exit 1
 	else 
 		echo
@@ -71,40 +73,41 @@ echo >> ${LOG_INSTALL}
 echo "### Installation et configuration des Soft" >> ${LOG_INSTALL}
 echo >> ${LOG_INSTALL}
 #Installer Tree, vérifier et instruire le fichier de LOG
-apt-get install -y tree
+apt-get install -y tree &>2
 
 if [[ "${?}" != 0 ]]
 	then
-		echo "Installation de tree KO" >> ${LOG_INSTALL}
+		echo "Installation de tree KO" >> ${LOG_INSTALL} >2
 		echo >> ${LOG_INSTALL}
 	else 
 		echo "Installation de tree OK" >> ${LOG_INSTALL}
 		echo >> ${LOG_INSTALL}
 fi
 #Installer VIM, vérifier et instruire le fichier de log
-apt-get install -y vim
+apt-get install -y vim &> /dev/null
 
 if [[ "${?}" != 0 ]]
 	then
-		echo "Installation de VIM KO" >> ${LOG_INSTALL}
+		echo "Installation de VIM KO" >> ${LOG_INSTALL} >2
 		echo >> ${LOG_INSTALL}
 	else 
 		echo "Installation de VIM OK" >> ${LOG_INSTALL}
 		echo >> ${LOG_INSTALL}
 fi
 #Setup de .VIMRC
-cp ~/Linux-Utils/vim/.vimrc ~/
+cp ~/Linux-Utils/vim/.vimrc ~/ &> /dev/null
 # Copier les plugins
-mkdir ~/.vim
-cp ~/Linux-Utils/vim/plugins/mswin.vim ~/.vim/
+mkdir ~/.vim &> /dev/null
+cp ~/Linux-Utils/vim/plugins/mswin.vim ~/.vim/ &> /dev/null
 
 
 #Installer Htop
-apt-get install -y htop
+apt-get install -y htop &> /dev/null
 
+ 
 if [[ "${?}" != 0 ]]
 	then
-		echo "Installation de htop KO" >> ${LOG_INSTALL}
+		echo "Installation de htop KO" >> ${LOG_INSTALL} >2
 		echo >> ${LOG_INSTALL}
 	else 
 		echo "Installation de htop  OK" >> ${LOG_INSTALL}
