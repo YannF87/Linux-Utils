@@ -138,4 +138,20 @@ echo "### Variables d'environement modifiées:" >> ${LOG_INSTALL}
 echo 'EDITOR="vim"' >> ~/.bashrc
 echo 'EDITOR="vim"' >> ${LOG_INSTALL}
 
+#Afficher les modifications au Login
+echo "Affichage des modifications au login" >> ~/.bashrc
+echo
+echo "Welcome ${USER}" >> ~/.bashrc
+echo >> ~/.bashrc
+echo ">>> ALIAS en place:" >> ~/.bashrc
+echo "ll='ls -alF'" >> ~/.bashrc
+echo "l='ls -CF'" >> ~/.bashrc
+echo "la='ls -la'" >> ~/.bashrc
+echo "cls=clear" >> ~/.bashrc
+echo >> ~/.bashrc
+echo ">>> Variables d'environement en place" >> ~/.bashrc
+echo '"EDITOR= VIM"' >> ~/.bashrc
+echo
+
+
 exit 0
