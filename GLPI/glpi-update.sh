@@ -42,12 +42,37 @@ LOG_STDERR=/var/log/glpi/update/update.err
 ################################################################################
 #Dump de la db
 ################################################################################
-#TODO
-
-
 #Copie de l'ancien dossier
-
 cp -r ${PATH}glpi/ glpi_old_${GLPI_CURRENT}/
+
+
+#date du jour
+DATE=`date +%y_%m_%d`
+ 
+#liste des dossier
+LISTEBDD=$( echo 'show databases' | mysql -u root -p 2zQwxaQZvdYo27phQs16 )
+ 
+#on boucle sur chaque dossier (for découpe automatiquement par l'espace)
+for SQL in $LISTEBDD
+ 
+	do
+ 
+		if [ $SQL != "information_schema" ] && [ $SQL != "mysql" ] && [ $SQL != "Database" ]; then
+ 
+			#echo $SQL
+			mysqldump -u root -p 2zQwxaQZvdYo27phQs16 $SQL | gzip > ${PATH}glpi/glpi_old_${GLPI_CURRENT}/DATABASES/$SQL"_mysql_"$DATE.sql.gz
+	
+			if [[ ${0} != 0 ]] 
+				then
+		 
+					echo "Echec de la Sauvegarde de la db: ${SQL}" >2 >> ${LOG_STDERR} 
+				else 
+					echo "Sauvegarde Réussie de la db: ${SQL} " &> ${LOG_STDOUT} 
+			fi
+			
+		fi
+
+	done
 
 #Téléchargement de la nouvelle version
 
